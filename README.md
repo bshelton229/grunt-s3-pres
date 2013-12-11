@@ -1,2 +1,1 @@
-Grunt S3 Presentation
-=====================
+# Grunt S3 Lightning Talk
