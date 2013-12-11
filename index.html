@@ -47,12 +47,38 @@
 				</section>
 
 				<section>
-					<h1>Code</h1>
-					<pre><code data-trim contenteditable>
-var test = function() {
-
+					<h2>grunt-aws-s3</h2>
+					<p>We use grunt-aws-s3 to send built assets to s3 to be made available for users. We build both a current snapshot
+					every time code is pushed, as well as releases.</p>
+					<pre><code>
+aws_s3: {
+  options: {
+    accessKeyId: "<%= conf.get('AWS_ACCESS_KEY_ID') %>",
+    secretAccessKey: "<%= conf.get('AWS_SECRET_ACCESS_KEY') %>",
+    bucket: "<%= conf.get('BUCKET') || 'uw-ui-toolkit' %>",
+    region: 'us-east-1',
+    differential: true
+  },
+  snapshot: {
+    files: [
+      { cwd: 'dist', src: ['**'], dest: 'snapshot', expand: true },
+      { cwd: 'build', src: 'uw-ui-toolkit-snapshot.zip', dest: 'downloads/', expand: true }
+    ]
+  },
+  release: {
+    options: {
+      differential: false,
+      params: {
+        CacheControl: 'public, max-age=2000'
+      }
+    },
+    files: [
+      { cwd: 'dist', src: ['**'], dest: '<%= pkg.version %>', expand: true },
+      { cwd: 'build', src: 'uw-ui-toolkit-<%=pkg.version %>.zip', dest: 'downloads/', expand: true }
+    ]
+  }
 }
-						</code></pre>
+					</code></pre>
 				</section>
 			</div>
 
